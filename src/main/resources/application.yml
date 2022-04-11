@@ -1,0 +1,21 @@
+server.port: 8080
+
+---
+spring.config.activate.on-profile: production
+
+spring.datasource.hikari.initializationFailTimeout: 60000
+
+---
+spring.config.activate.on-profile: testing
+
+
+
+---
+spring.config.activate.on-profile: development
+
+spring.datasource:
+  url: jdbc:postgresql://localhost/postgres
+  username: postgres
+  password: localwalle
+
+spring.datasource.hikari.initializationFailTimeout: 10000
