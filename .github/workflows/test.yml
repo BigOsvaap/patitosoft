@@ -1,0 +1,23 @@
+name: Testing
+on:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+
+  migration-testing:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
+      - name: Set up JDK 17
+        with:
+          distribution: 'adopt'
+          java-version: '17'
+      - name: Info migrations
+        run: ./gradlew flywayInfo
+      - name: Validate migrations
+        run: ./gradlew flywayValidate
+      - name: Apply migrations
+        run: ./gradlew flywayMigrate
