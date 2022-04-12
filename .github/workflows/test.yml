@@ -17,19 +17,19 @@ jobs:
           distribution: 'adopt'
           java-version: '17'
       - name: Info migrations
-        run: ./gradlew flywayInfo
+        run: ./gradlew flywayInfo --args='--spring.profiles.active=test_migrations'
         env:
           TESTING_DB_URL: ${{ secrets.TESTING_DB_URL }}
           TESTING_DB_USERNAME: ${{ secrets.TESTING_DB_USERNAME }}
           TESTING_DB_PASSWORD: ${{ secrets.TESTING_DB_PASSWORD }}
       - name: Validate migrations
-        run: ./gradlew flywayValidate
+        run: ./gradlew flywayValidate --args='--spring.profiles.active=test_migrations'
         env:
           TESTING_DB_URL: ${{ secrets.TESTING_DB_URL }}
           TESTING_DB_USERNAME: ${{ secrets.TESTING_DB_USERNAME }}
           TESTING_DB_PASSWORD: ${{ secrets.TESTING_DB_PASSWORD }}
       - name: Apply migrations
-        run: ./gradlew flywayMigrate
+        run: ./gradlew flywayMigrate --args='--spring.profiles.active=test_migrations'
         env:
           TESTING_DB_URL: ${{ secrets.TESTING_DB_URL }}
           TESTING_DB_USERNAME: ${{ secrets.TESTING_DB_USERNAME }}

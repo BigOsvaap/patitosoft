@@ -4,9 +4,9 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 -- Gender table
 
 CREATE TABLE gender(
-    id UUID DEFAULT uuid_generate_v4(),
+    gender_id UUID DEFAULT uuid_generate_v4(),
     name VARCHAR(20) UNIQUE NOT NULL,
-    PRIMARY KEY (id)
+    PRIMARY KEY (gender_id)
 );
 
 INSERT INTO
@@ -20,9 +20,9 @@ VALUES
 -- Country table
 
 CREATE TABLE country(
-    id UUID DEFAULT uuid_generate_v4(),
+    country_id UUID DEFAULT uuid_generate_v4(),
     code CHAR(2) UNIQUE NOT NULL,
-    PRIMARY KEY (id)
+    PRIMARY KEY (country_id)
 );
 
 INSERT INTO
@@ -35,46 +35,46 @@ VALUES
 -- State table
 
 CREATE TABLE state(
-    id UUID DEFAULT uuid_generate_v4(),
+    state_id UUID DEFAULT uuid_generate_v4(),
     country_id UUID NOT NULL,
     name VARCHAR(60) UNIQUE NOT NULL,
-    PRIMARY KEY (id),
-    FOREIGN KEY (country_id) REFERENCES country(id)
+    PRIMARY KEY (state_id),
+    FOREIGN KEY (country_id) REFERENCES country(country_id)
 );
 
 WITH mexico AS (
     SELECT * FROM country WHERE code = 'MX'
 )
 INSERT INTO state(country_id, name)
-VALUES ((SELECT mexico.id FROM mexico), 'VERACRUZ'),
-       ((SELECT mexico.id FROM mexico), 'SONORA'),
-       ((SELECT mexico.id FROM mexico), 'YUCATAN'),
-       ((SELECT mexico.id FROM mexico), 'NUEVO LEON');
+VALUES ((SELECT mexico.country_id FROM mexico), 'VERACRUZ'),
+       ((SELECT mexico.country_id FROM mexico), 'SONORA'),
+       ((SELECT mexico.country_id FROM mexico), 'YUCATAN'),
+       ((SELECT mexico.country_id FROM mexico), 'NUEVO LEON');
 
 WITH usa AS (
     SELECT * FROM country WHERE code = 'US'
 )
 INSERT INTO state(country_id, name)
-VALUES ((SELECT usa.id FROM usa), 'TEXAS'),
-       ((SELECT usa.id FROM usa), 'ARIZONA'),
-       ((SELECT usa.id FROM usa), 'CALIFORNIA'),
-       ((SELECT usa.id FROM usa), 'ARKANSAS');
+VALUES ((SELECT usa.country_id FROM usa), 'TEXAS'),
+       ((SELECT usa.country_id FROM usa), 'ARIZONA'),
+       ((SELECT usa.country_id FROM usa), 'CALIFORNIA'),
+       ((SELECT usa.country_id FROM usa), 'ARKANSAS');
 
 WITH brazil AS (
     SELECT * FROM country WHERE code = 'BR'
 )
 INSERT INTO state(country_id, name)
-VALUES ((SELECT brazil.id FROM brazil), 'ACRE'),
-       ((SELECT brazil.id FROM brazil), 'RONDONIA'),
-       ((SELECT brazil.id FROM brazil), 'MARANHAO'),
-       ((SELECT brazil.id FROM brazil), 'BAHIA');
+VALUES ((SELECT brazil.country_id FROM brazil), 'ACRE'),
+       ((SELECT brazil.country_id FROM brazil), 'RONDONIA'),
+       ((SELECT brazil.country_id FROM brazil), 'MARANHAO'),
+       ((SELECT brazil.country_id FROM brazil), 'BAHIA');
 
 -- Position table
 
 CREATE TABLE position(
-    id UUID DEFAULT uuid_generate_v4(),
+    position_id UUID DEFAULT uuid_generate_v4(),
     name VARCHAR(60) UNIQUE NOT NULL,
-    PRIMARY KEY (id)
+    PRIMARY KEY (position_id)
 );
 
 INSERT INTO
