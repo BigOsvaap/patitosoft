@@ -1,6 +1,7 @@
 plugins {
     id 'org.springframework.boot' version '2.6.6'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id "org.flywaydb.flyway" version "8.5.7"
     id 'java'
 }
 
@@ -16,10 +17,18 @@ ext {
     set('testcontainersVersion', "1.16.2")
 }
 
+flyway {
+    url = System.getenv("TESTING_DB_URL")
+    user = System.getenv("TESTING_DB_USERNAME")
+    password = System.getenv("TESTING_DB_PASSWORD")
+    locations = ['classpath:db/migration']
+}
+
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
+    implementation 'org.flywaydb:flyway-core'
     runtimeOnly 'org.postgresql:postgresql'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'io.projectreactor:reactor-test'
