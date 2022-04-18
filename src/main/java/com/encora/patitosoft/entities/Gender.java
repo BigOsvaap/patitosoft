@@ -1,4 +1,4 @@
-package com.encora.patitosoft.models;
+package com.encora.patitosoft.entities;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,6 +14,7 @@ public class Gender {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "gender_id")
     private UUID id;
 
     @Column(unique = true, nullable = false, length = 20)

@@ -1,4 +1,4 @@
-package com.encora.patitosoft.models;
+package com.encora.patitosoft.entities;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,6 +17,7 @@ public class EmployeePosition {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "employee_position_id")
     private UUID id;
 
     @ManyToOne(optional = false)
@@ -35,11 +36,10 @@ public class EmployeePosition {
 
     public EmployeePosition() { }
 
-    public EmployeePosition(UUID id, Employee employee, Position position, LocalDateTime date, Double salary) {
-        this.id = id;
+    public EmployeePosition(Employee employee, Position position, Double salary) {
         this.employee = employee;
         this.position = position;
-        this.date = date;
+        this.date = LocalDateTime.now();
         this.salary = salary;
     }
 

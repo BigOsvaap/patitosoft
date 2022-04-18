@@ -1,4 +1,4 @@
-package com.encora.patitosoft.models;
+package com.encora.patitosoft.entities;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,6 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -17,6 +18,7 @@ public class Employee {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "employee_id")
     private UUID id;
 
     @Column(name = "corporate_email", nullable = false, unique = true)
@@ -44,7 +46,7 @@ public class Employee {
     private String zipCode;
 
     @Column(name = "birth_day")
-    private LocalDateTime birthDay;
+    private LocalDate birthDay;
 
     @Column(name = "is_deleted", nullable = false, insertable = false)
     private Boolean isDeleted;
@@ -63,8 +65,7 @@ public class Employee {
 
     public Employee() {}
 
-    public Employee(UUID id, String corporateEmail, String firstName, String lastName, String personalEmail, String phoneNumber, String city, String street, String zipCode, LocalDateTime birthDay, Boolean isDeleted, Gender gender, Country country, State state) {
-        this.id = id;
+    public Employee(String corporateEmail, String firstName, String lastName, String personalEmail, String phoneNumber, String city, String street, String zipCode, LocalDate birthDay, Gender gender, Country country, State state) {
         this.corporateEmail = corporateEmail;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -74,7 +75,7 @@ public class Employee {
         this.street = street;
         this.zipCode = zipCode;
         this.birthDay = birthDay;
-        this.isDeleted = isDeleted;
+        this.isDeleted = false;
         this.gender = gender;
         this.country = country;
         this.state = state;
@@ -152,11 +153,11 @@ public class Employee {
         this.zipCode = zipCode;
     }
 
-    public LocalDateTime getBirthDay() {
+    public LocalDate getBirthDay() {
         return birthDay;
     }
 
-    public void setBirthDay(LocalDateTime birthDay) {
+    public void setBirthDay(LocalDate birthDay) {
         this.birthDay = birthDay;
     }
 
