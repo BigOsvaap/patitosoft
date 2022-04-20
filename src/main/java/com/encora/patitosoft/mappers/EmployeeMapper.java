@@ -20,7 +20,7 @@ public interface EmployeeMapper {
 
     @InheritInverseConfiguration
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "deleted", ignore = true)
+    @Mapping(target = "isDeleted", ignore = true)
     @Mapping(target = "gender", ignore = true)
     @Mapping(target = "state", ignore = true)
     @Mapping(target = "country", ignore = true)
@@ -34,13 +34,5 @@ public interface EmployeeMapper {
     @Mapping(target = "address.state", source = "state.name")
     @Mapping(target = "history", ignore = true)
     AdminEmployeeInfo employeeEntityToAdminEmployeeInfo(Employee employee);
-
-    @InheritInverseConfiguration
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "deleted", ignore = true)
-    @Mapping(target = "gender", ignore = true)
-    @Mapping(target = "state", ignore = true)
-    @Mapping(target = "country", ignore = true)
-    Employee AdminEmployeeInfoToEmployeeEntity(AdminEmployeeInfo adminEmployeeInfo);
 
 }

@@ -7,6 +7,7 @@ import com.encora.patitosoft.repositories.projections.EmployeesByPosition;
 import com.encora.patitosoft.services.CountryService;
 import com.encora.patitosoft.services.GenderService;
 import com.encora.patitosoft.services.PositionService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,17 +18,12 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/v1/reports")
+@RequiredArgsConstructor
 public class ReportController {
 
     private final PositionService positionService;
     private final GenderService genderService;
     private final CountryService countryService;
-
-    public ReportController(PositionService positionService, GenderService genderService, CountryService countryService) {
-        this.positionService = positionService;
-        this.genderService = genderService;
-        this.countryService = countryService;
-    }
 
     @GetMapping("/positions")
     public ResponseEntity<List<EmployeesByPosition>> positionsReport() {

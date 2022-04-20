@@ -19,7 +19,7 @@ public interface PositionRepository extends JpaRepository<Position, UUID> {
                         name AS position,
                         COUNT(employee_id) AS totalEmployees
                     FROM
-                        (SELECT DISTINCT employee_id, position_id, date FROM employee_position ORDER BY date DESC) as employeesCurrentPosition
+                        (SELECT DISTINCT ON(employee_id) employee_id, position_id, date FROM employee_position ORDER BY employee_id, date DESC) as employeesCurrentPosition
                     LEFT JOIN position USING (position_id)
                     LEFT JOIN employee USING (employee_id)
                     WHERE is_deleted = FALSE
@@ -74,13 +74,14 @@ public interface PositionRepository extends JpaRepository<Position, UUID> {
                     FROM (SELECT
                                 salary >= :greaterThanOrEqual AND salary < :smallerThan AS range,
                                 COUNT(currentSalaries.employee_id) AS totalEmployees
-                          FROM (SELECT DISTINCT employee_id,
+                          FROM (SELECT DISTINCT ON(employee_id)
+                                                employee_id,
                                                 date,
                                                 salary
                                 FROM employee_position
                                 LEFT JOIN employee USING (employee_id)
                                 WHERE is_deleted = FALSE
-                                ORDER BY date DESC) AS currentSalaries
+                                ORDER BY employee_id, date DESC) AS currentSalaries
                           GROUP BY range) AS employeesBetweenRange
                     WHERE range = TRUE
                     """,

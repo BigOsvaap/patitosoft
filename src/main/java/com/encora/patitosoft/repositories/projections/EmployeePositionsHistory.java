@@ -1,11 +1,11 @@
 package com.encora.patitosoft.repositories.projections;
 
-import java.sql.Date;
+import java.time.LocalDateTime;
 
 public interface EmployeePositionsHistory {
 
     String getPositionName();
     Double getSalary();
-    Date getDate();
+    LocalDateTime getDate();
 
 }

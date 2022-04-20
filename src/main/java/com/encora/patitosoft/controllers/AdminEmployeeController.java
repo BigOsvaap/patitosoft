@@ -5,6 +5,7 @@ import com.encora.patitosoft.dto.EmployeePositionSalary;
 import com.encora.patitosoft.dto.NormalEmployeeInfo;
 import com.encora.patitosoft.repositories.projections.AdminEmployeeSearchInfo;
 import com.encora.patitosoft.services.EmployeeService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,13 +20,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/v1/admin/employees")
+@RequiredArgsConstructor
 public class AdminEmployeeController {
 
     private final EmployeeService service;
-
-    public AdminEmployeeController(EmployeeService service) {
-        this.service = service;
-    }
 
     @PostMapping
     public ResponseEntity<NormalEmployeeInfo> registerEmployee(@RequestBody NormalEmployeeInfo normalEmployeeInfo) {

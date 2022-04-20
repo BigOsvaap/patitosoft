@@ -3,6 +3,7 @@ package com.encora.patitosoft.services;
 import com.encora.patitosoft.repositories.PositionRepository;
 import com.encora.patitosoft.repositories.projections.EmployeeBetweenRange;
 import com.encora.patitosoft.repositories.projections.EmployeesByPosition;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -10,13 +11,10 @@ import java.util.List;
 import java.util.Objects;
 
 @Service
+@RequiredArgsConstructor
 public class PositionService {
 
     private final PositionRepository positionRepository;
-
-    public PositionService(PositionRepository positionRepository) {
-        this.positionRepository = positionRepository;
-    }
 
     public List<EmployeesByPosition> employeesByPositions() {
         return positionRepository.countEmployeesByPosition();

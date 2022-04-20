@@ -1,0 +1,1 @@
+ALTER TABLE employee_position ALTER COLUMN date TYPE TIMESTAMP;

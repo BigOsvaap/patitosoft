@@ -1,7 +1,6 @@
 package com.encora.patitosoft.repositories;
 
 import com.encora.patitosoft.entities.Employee;
-import com.encora.patitosoft.repositories.custom.SearchRepositoryCustom;
 import com.encora.patitosoft.repositories.projections.AdminEmployeeSearchInfo;
 import com.encora.patitosoft.repositories.projections.NormalEmployeeSearchInfo;
 import org.springframework.data.domain.Page;
@@ -15,36 +14,49 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface EmployeeRepository extends JpaRepository<Employee, UUID>, SearchRepositoryCustom {
+public interface EmployeeRepository extends JpaRepository<Employee, UUID> {
 
     @Query(
             value = """
                     SELECT
-                        corporate_email AS corporateEmail,
-                        first_name AS firstName,
-                        last_name AS lastName,
-                        name AS positionName
-                    FROM employee
-                    LEFT JOIN employee_position USING (employee_id)
-                    LEFT JOIN position USING (position_id)
-                    WHERE is_deleted = FALSE AND
-                          first_name ILIKE '%' || :firstName || '%' AND
-                          last_name ILIKE '%' || :lastName || '%' AND
-                          name ILIKE '%' || :position || '%'
+                        *
+                    FROM (
+                             SELECT
+                                 DISTINCT ON (corporate_email)
+                                 corporate_email AS corporateEmail,
+                                 first_name AS firstName,
+                                 last_name AS lastName,
+                                 name AS positionName
+                             FROM employee
+                                      LEFT JOIN employee_position USING (employee_id)
+                                      LEFT JOIN position USING (position_id)
+                             WHERE is_deleted = FALSE AND
+                                     first_name ILIKE '%' || :firstName || '%' AND
+                                     last_name ILIKE '%' || :lastName || '%'
+                             ORDER BY corporate_email, date DESC
+                        ) AS actualPosition
+                    WHERE positionName ILIKE '%' || :position || '%'
                     """,
             countQuery = """
                     SELECT
-                        COUNT(*)
+                        COUNT(corporate_email)
                     FROM (
                         SELECT
                             corporate_email
-                        FROM employee
-                        LEFT JOIN employee_position USING (employee_id)
-                        LEFT JOIN position USING (position_id)
-                        WHERE is_deleted = FALSE AND
-                              first_name ILIKE '%' || :firstName || '%' AND
-                              last_name ILIKE '%' || :lastName || '%' AND
-                              name ILIKE '%' || :position || '%'
+                        FROM (
+                                 SELECT
+                                     DISTINCT ON (corporate_email)
+                                     corporate_email,
+                                     name
+                                 FROM employee
+                                          LEFT JOIN employee_position USING (employee_id)
+                                          LEFT JOIN position USING (position_id)
+                                 WHERE is_deleted = FALSE AND
+                                         first_name ILIKE '%' || :firstName || '%' AND
+                                         last_name ILIKE '%' || :lastName || '%'
+                                 ORDER BY corporate_email, date DESC
+                            ) AS actualPosition
+                        WHERE name ILIKE '%' || :position || '%'
                         ) AS countTable
             """,
             nativeQuery = true
@@ -57,34 +69,47 @@ public interface EmployeeRepository extends JpaRepository<Employee, UUID>, Searc
     @Query(
             value = """
                     SELECT
-                        corporate_email AS corporateEmail,
-                        first_name AS firstName,
-                        last_name AS lastName,
-                        name AS positionName,
-                        is_deleted AS isDeleted
-                    FROM employee
-                    LEFT JOIN employee_position USING (employee_id)
-                    LEFT JOIN position USING (position_id)
-                    WHERE is_deleted = :isDeleted AND
-                          first_name ILIKE '%' || :firstName || '%' AND
-                          last_name ILIKE '%' || :lastName || '%' AND
-                          name ILIKE '%' || :position || '%'
+                        *
+                    FROM (
+                             SELECT
+                                 DISTINCT ON (corporate_email)
+                                 corporate_email AS corporateEmail,
+                                 first_name AS firstName,
+                                 last_name AS lastName,
+                                 name AS positionName,
+                                 is_deleted AS isDeleted
+                             FROM employee
+                                      LEFT JOIN employee_position USING (employee_id)
+                                      LEFT JOIN position USING (position_id)
+                             WHERE is_deleted = :isDeleted AND
+                                     first_name ILIKE '%' || :firstName || '%' AND
+                                     last_name ILIKE '%' || :lastName || '%'
+                             ORDER BY corporate_email, date DESC
+                        ) AS actualPosition
+                    WHERE positionName ILIKE '%' || :position || '%'
                     """
             ,
             countQuery = """
                     SELECT
                         COUNT(*)
                     FROM (
-                            SELECT
-                                corporate_email
-                            FROM employee
-                            LEFT JOIN employee_position USING (employee_id)
-                            LEFT JOIN position USING (position_id)
-                            WHERE is_deleted = :isDeleted AND
-                                  first_name ILIKE '%' || :firstName || '%' AND
-                                  last_name ILIKE '%' || :lastName || '%' AND
-                                  name ILIKE '%' || :position || '%'
-                    ) AS countTable
+                        SELECT
+                            corporate_email
+                        FROM (
+                                 SELECT
+                                     DISTINCT ON (corporate_email)
+                                     corporate_email,
+                                     name
+                                 FROM employee
+                                          LEFT JOIN employee_position USING (employee_id)
+                                          LEFT JOIN position USING (position_id)
+                                 WHERE is_deleted = :isDeleted AND
+                                         first_name ILIKE '%' || :firstName || '%' AND
+                                         last_name ILIKE '%' || :lastName || '%'
+                                 ORDER BY corporate_email, date DESC
+                            ) AS actualPosition
+                        WHERE name ILIKE '%' || :position || '%'
+                        ) AS countTable
                     """,
             nativeQuery = true
     )
@@ -131,6 +156,6 @@ public interface EmployeeRepository extends JpaRepository<Employee, UUID>, Searc
                     """,
             nativeQuery = true
     )
-    Integer deleteEmployeeByCorporateEmail(String corporateEmail);
+    void deleteEmployeeByCorporateEmail(String corporateEmail);
 
 }

@@ -19,6 +19,7 @@ import com.encora.patitosoft.repositories.StateRepository;
 import com.encora.patitosoft.repositories.projections.AdminEmployeeSearchInfo;
 import com.encora.patitosoft.repositories.projections.EmployeePositionsHistory;
 import com.encora.patitosoft.repositories.projections.NormalEmployeeSearchInfo;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class EmployeeService {
 
     private final EmployeeRepository employeeRepository;
@@ -41,23 +43,6 @@ public class EmployeeService {
 
     private final EmployeeMapper mapper;
 
-    public EmployeeService(EmployeeRepository employeeRepository,
-                           EmployeePositionRepository employeePositionRepository,
-                           GenderRepository genderRepository,
-                           CountryRepository countryRepository,
-                           StateRepository stateRepository,
-                           PositionRepository positionRepository,
-                           EmployeeMapper mapper) {
-
-        this.employeeRepository = employeeRepository;
-        this.employeePositionRepository = employeePositionRepository;
-        this.genderRepository = genderRepository;
-        this.countryRepository = countryRepository;
-        this.stateRepository = stateRepository;
-        this.positionRepository = positionRepository;
-        this.mapper = mapper;
-
-    }
 
     public NormalEmployeeInfo saveEmployee(NormalEmployeeInfo normalEmployeeInfo) {
         Employee employeeToSave = mapper.NormalEmployeeInfoToEmployeeEntity(normalEmployeeInfo);
@@ -81,7 +66,7 @@ public class EmployeeService {
         Optional<Employee> optionalEmployee = employeeRepository.findByCorporateEmail(corporateEmail);
         optionalEmployee.orElseThrow(() -> new NotFoundException("Employee not found"));
 
-        if (optionalEmployee.get().getDeleted()) {
+        if (optionalEmployee.get().getIsDeleted()) {
             throw new NotFoundException("Employee not found");
         }
 
@@ -102,7 +87,7 @@ public class EmployeeService {
     public NormalEmployeeInfo employeeNormalInfoByCorporateEmail(String corporateEmail) {
         Optional<Employee> employee = employeeRepository.findByCorporateEmail(corporateEmail);
         employee.orElseThrow(() -> new NotFoundException("Employee not found"));
-        if (employee.get().getDeleted()) {
+        if (employee.get().getIsDeleted()) {
             throw new NotFoundException("Employee not found");
         }
         return mapper.employeeEntityToNormalEmployeeInfo(employee.get());
