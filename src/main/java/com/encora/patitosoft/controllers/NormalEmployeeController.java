@@ -4,6 +4,7 @@ package com.encora.patitosoft.controllers;
 import com.encora.patitosoft.dto.NormalEmployeeInfo;
 import com.encora.patitosoft.repositories.projections.NormalEmployeeSearchInfo;
 import com.encora.patitosoft.services.EmployeeService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,13 +17,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/v1/employees")
+@RequiredArgsConstructor
 public class NormalEmployeeController {
 
     private final EmployeeService service;
-
-    public NormalEmployeeController(EmployeeService service) {
-        this.service = service;
-    }
 
     @GetMapping
     public ResponseEntity<Page<NormalEmployeeSearchInfo>> normalEmployeeSearch(@RequestParam(defaultValue = "") String firstName,

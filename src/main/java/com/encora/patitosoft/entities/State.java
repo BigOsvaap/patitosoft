@@ -1,5 +1,9 @@
 package com.encora.patitosoft.entities;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,6 +14,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.util.UUID;
 
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "state")
 public class State {
@@ -25,38 +32,5 @@ public class State {
     @ManyToOne(optional = false)
     @JoinColumn(name = "country_id", nullable = false)
     private Country country;
-
-    public State() {
-    }
-
-    public State(UUID id, String name, Country country) {
-        this.id = id;
-        this.name = name;
-        this.country = country;
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Country getCountry() {
-        return country;
-    }
-
-    public void setCountry(Country country) {
-        this.country = country;
-    }
 
 }
