@@ -7,17 +7,20 @@ import com.encora.patitosoft.services.EmployeeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.constraints.Email;
 import java.util.List;
 
 @RestController
 @RequestMapping("/v1/employees")
 @RequiredArgsConstructor
+@Validated
 public class NormalEmployeeController {
 
     private final EmployeeService service;
@@ -32,7 +35,7 @@ public class NormalEmployeeController {
     }
 
     @GetMapping("/{corporateEmail}")
-    public ResponseEntity<NormalEmployeeInfo> detailsSpecificEmployee(@PathVariable String corporateEmail) {
+    public ResponseEntity<NormalEmployeeInfo> detailsSpecificEmployee(@Email @PathVariable String corporateEmail) {
         return ResponseEntity.ok(service.employeeNormalInfoByCorporateEmail(corporateEmail));
     }
 
