@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,22 +19,26 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+import javax.validation.constraints.Email;
+
 @RestController
 @RequestMapping("/v1/admin/employees")
 @RequiredArgsConstructor
+@Validated
 public class AdminEmployeeController {
 
     private final EmployeeService service;
 
     @PostMapping
-    public ResponseEntity<NormalEmployeeInfo> registerEmployee(@RequestBody NormalEmployeeInfo normalEmployeeInfo) {
+    public ResponseEntity<NormalEmployeeInfo> registerEmployee(@Valid @RequestBody NormalEmployeeInfo normalEmployeeInfo) {
         return new ResponseEntity<>(service.saveEmployee(normalEmployeeInfo), HttpStatus.CREATED);
     }
 
     @PostMapping("/position")
-    public ResponseEntity assignPositionAndSalaryToEmployee(@RequestBody EmployeePositionSalary eps) {
+    public ResponseEntity<Object> assignPositionAndSalaryToEmployee(@Valid @RequestBody EmployeePositionSalary eps) {
         service.assignPositionToEmployee(eps.getCorporateEmail(), eps.getPositionName(), eps.getSalary());
-        return ResponseEntity.ok().build();
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @GetMapping
@@ -47,14 +52,14 @@ public class AdminEmployeeController {
     }
 
     @GetMapping("/{corporateEmail}")
-    public ResponseEntity<AdminEmployeeInfo> detailsSpecificEmployee(@PathVariable String corporateEmail) {
+    public ResponseEntity<AdminEmployeeInfo> detailsSpecificEmployee(@Email @PathVariable String corporateEmail) {
         return ResponseEntity.ok(service.employeeAdminInfoByCorporateEmail(corporateEmail));
     }
 
     @DeleteMapping("/{corporateEmail}")
-    public ResponseEntity softDeleteEmployee(@PathVariable String corporateEmail) {
+    public ResponseEntity<Object> softDeleteEmployee(@Email @PathVariable String corporateEmail) {
         service.softDeleteEmployeeByCorporateEmail(corporateEmail);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 
 }

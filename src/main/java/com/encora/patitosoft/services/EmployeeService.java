@@ -8,6 +8,7 @@ import com.encora.patitosoft.entities.EmployeePosition;
 import com.encora.patitosoft.entities.Gender;
 import com.encora.patitosoft.entities.Position;
 import com.encora.patitosoft.entities.State;
+import com.encora.patitosoft.exceptions.InvalidInputException;
 import com.encora.patitosoft.exceptions.NotFoundException;
 import com.encora.patitosoft.mappers.EmployeeMapper;
 import com.encora.patitosoft.repositories.CountryRepository;
@@ -45,7 +46,10 @@ public class EmployeeService {
 
 
     public NormalEmployeeInfo saveEmployee(NormalEmployeeInfo normalEmployeeInfo) {
-        Employee employeeToSave = mapper.NormalEmployeeInfoToEmployeeEntity(normalEmployeeInfo);
+        Employee employeeToSave = mapper.normalEmployeeInfoToEmployeeEntity(normalEmployeeInfo);
+        if (employeeRepository.findByCorporateEmail(employeeToSave.getCorporateEmail()).isPresent()) {
+            throw new InvalidInputException("Employee already exists");
+        }
 
         Optional<Country> country = countryRepository.findByCode(normalEmployeeInfo.getAddress().getCountryCode());
         country.orElseThrow(() -> new NotFoundException("Country code doesn't exist"));

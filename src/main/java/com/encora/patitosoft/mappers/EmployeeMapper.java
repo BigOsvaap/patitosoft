@@ -24,7 +24,7 @@ public interface EmployeeMapper {
     @Mapping(target = "gender", ignore = true)
     @Mapping(target = "state", ignore = true)
     @Mapping(target = "country", ignore = true)
-    Employee NormalEmployeeInfoToEmployeeEntity(NormalEmployeeInfo normalEmployeeInfo);
+    Employee normalEmployeeInfoToEmployeeEntity(NormalEmployeeInfo normalEmployeeInfo);
 
     @Mapping(target = "gender", source = "gender.name")
     @Mapping(target = "address.city", source = "city")
