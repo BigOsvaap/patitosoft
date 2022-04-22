@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 
 @RestController
 @RequestMapping("/v1/admin/employees")
@@ -57,7 +58,7 @@ public class AdminEmployeeController {
     }
 
     @DeleteMapping("/{corporateEmail}")
-    public ResponseEntity<Object> softDeleteEmployee(@Email @PathVariable String corporateEmail) {
+    public ResponseEntity<Object> softDeleteEmployee(@Email @NotBlank @PathVariable String corporateEmail) {
         service.softDeleteEmployeeByCorporateEmail(corporateEmail);
         return ResponseEntity.noContent().build();
     }
