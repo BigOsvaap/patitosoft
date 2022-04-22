@@ -47,7 +47,7 @@ public class EmployeeService {
 
     public NormalEmployeeInfo saveEmployee(NormalEmployeeInfo normalEmployeeInfo) {
         Employee employeeToSave = mapper.normalEmployeeInfoToEmployeeEntity(normalEmployeeInfo);
-        if (employeeRepository.findByCorporateEmail(employeeToSave.getCorporateEmail()).isPresent()) {
+        if (employeeRepository.findByCorporateEmail(normalEmployeeInfo.getCorporateEmail()).isPresent()) {
             throw new InvalidInputException("Employee already exists");
         }
 
@@ -68,9 +68,8 @@ public class EmployeeService {
 
     public void assignPositionToEmployee(String corporateEmail, String positionName, Double salary) {
         Optional<Employee> optionalEmployee = employeeRepository.findByCorporateEmail(corporateEmail);
-        optionalEmployee.orElseThrow(() -> new NotFoundException("Employee not found"));
 
-        if (optionalEmployee.get().getIsDeleted()) {
+        if (optionalEmployee.isEmpty() || optionalEmployee.get().getIsDeleted()) {
             throw new NotFoundException("Employee not found");
         }
 
@@ -90,8 +89,7 @@ public class EmployeeService {
 
     public NormalEmployeeInfo employeeNormalInfoByCorporateEmail(String corporateEmail) {
         Optional<Employee> employee = employeeRepository.findByCorporateEmail(corporateEmail);
-        employee.orElseThrow(() -> new NotFoundException("Employee not found"));
-        if (employee.get().getIsDeleted()) {
+        if (employee.isEmpty() || employee.get().getIsDeleted()) {
             throw new NotFoundException("Employee not found");
         }
         return mapper.employeeEntityToNormalEmployeeInfo(employee.get());

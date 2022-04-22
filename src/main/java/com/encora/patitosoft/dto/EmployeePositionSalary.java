@@ -10,6 +10,7 @@ import javax.validation.constraints.NotNull;
 public class EmployeePositionSalary {
 
     @Email
+    @NotBlank
     private String corporateEmail;
 
     @NotBlank

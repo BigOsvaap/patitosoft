@@ -18,7 +18,7 @@ public interface EmployeePositionRepository extends JpaRepository<EmployeePositi
             FROM employee_position
             LEFT JOIN position USING (position_id)
             LEFT JOIN  employee USING (employee_id)
-            WHERE corporate_email = ? AND is_deleted = FALSE
+            WHERE corporate_email = ?
             """,
             nativeQuery = true
     )

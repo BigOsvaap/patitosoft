@@ -19,20 +19,6 @@ class PatitosoftApplicationTests extends PostgresDbTestContainer{
     @Autowired private GenderRepository genderRepository;
 
     @Test
-    public void genderReportIncludesAllRegisteredGenders() {
-        WebTestClient.BodyContentSpec bodyContentSpec = webClient.get()
-                .uri("/v1/reports/genders")
-                .accept(MediaType.APPLICATION_JSON)
-                .exchange()
-                .expectStatus().isEqualTo(HttpStatus.OK)
-                .expectHeader().contentType(MediaType.APPLICATION_JSON)
-                .expectBody();
-
-        bodyContentSpec.jsonPath("$.length()").isEqualTo(genderRepository.findAll().size());
-
-    }
-
-    @Test
     public void positionReportIncludesAllRegisteredPositions() {
         WebTestClient.BodyContentSpec bodyContentSpec = webClient.get()
                 .uri("/v1/reports/positions")
@@ -43,7 +29,35 @@ class PatitosoftApplicationTests extends PostgresDbTestContainer{
                 .expectBody();
 
         bodyContentSpec.jsonPath("$.length()").isEqualTo(positionRepository.findAll().size());
-
     }
+
+    @Test
+    public void genderReportIncludesAllRegisteredGenders() {
+        WebTestClient.BodyContentSpec bodyContentSpec = webClient.get()
+                .uri("/v1/reports/genders")
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isEqualTo(HttpStatus.OK)
+                .expectHeader().contentType(MediaType.APPLICATION_JSON)
+                .expectBody();
+
+        bodyContentSpec.jsonPath("$.length()").isEqualTo(genderRepository.findAll().size());
+    }
+
+    @Test
+    public void salariesReportIncludesRangesGiven() {
+        int ranges = 5;
+        WebTestClient.BodyContentSpec bodyContentSpec = webClient.get()
+                .uri("/v1/reports/salaries?ranges=" + ranges)
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isOk()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON)
+                .expectBody();
+
+        bodyContentSpec.jsonPath("$.length()").isEqualTo(ranges);
+    }
+
+
 
 }

@@ -11,6 +11,7 @@ import java.time.LocalDate;
 public class NormalEmployeeInfo {
 
     @Email
+    @NotBlank
     String corporateEmail;
 
     @NotBlank

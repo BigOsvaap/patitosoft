@@ -49,6 +49,4 @@ public class NormalEmployeeController {
         return ResponseEntity.ok(service.whoIsBirthdayNextWeekEmails());
     }
 
-
-
 }
